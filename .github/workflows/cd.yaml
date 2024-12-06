@@ -33,8 +33,8 @@ jobs:
         run: |
           cd helm
           sed -i 's|APP_VERSION:.*|APP_VERSION: '${{ github.sha }}'|' values.yaml 
-          git config --global user.name 'devopshint'
-          git config --global user.email 'devopshint@gmail.com'
+          git config --global user.name 'joaolgn1985'
+          git config --global user.email 'joaolgn1985@gmail.com'
           git add values.yaml
           git commit -m "Update values.yaml"
           git push
