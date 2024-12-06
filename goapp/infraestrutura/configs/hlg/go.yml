@@ -24,3 +24,8 @@ autoscaling:
   maxReplicas: 2
   targetCPUUtilizationPercentage: 80
   targetMemoryUtilizationPercentage: 80
+
+configs:
+  database_url: "postgres://db.unicred.tech"
+  api_key: $(apikey)
+  log_leveL: "debug"
