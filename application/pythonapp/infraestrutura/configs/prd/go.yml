@@ -1,0 +1,31 @@
+name: go-api
+
+gateway:
+  enabled: true 
+  alias: goapi
+  domain: unicred.com
+
+image: goapi
+healthcheck: true
+
+envConfig: main.go
+
+resources:
+  limits:
+    cpu: 50m
+    memory: 110Mi
+  requests:
+    cpu: 20m
+    memory: 80Mi
+
+autoscaling:
+  enabled: true 
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+configs:
+  database_url: "postgres://db.unicred.com"
+  api_key: $(apikey)
+  log_leveL: "debug"
