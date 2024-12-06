@@ -76,3 +76,7 @@ spec:
 #{{- range .Values.list}}
 # - name {{ . }}
 #{{- end }}
+
+# helm create mychart
+# helm package mychart
+# helm lint ./my-chart
