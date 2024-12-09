@@ -21,8 +21,8 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        docker build -t yourImageRepository:${{ github.sha }} .
-        docker push yourImageRepository:${{ github.sha }}
+        docker build -t rhavis/helmdeploy:${{ github.sha }} .
+        docker push rhavis/helmdeploy:${{ github.sha }}
 
     - name: Set up Kubectl
       uses: azure/setup-kubectl@v3
@@ -40,6 +40,6 @@ jobs:
         KUBECONFIG: ${{ github.workspace }}/kubeconfig
       run: |
        cd my-app       helm upgrade --install my-app . \
-       --set image.repository=yourImageRepository \
+       --set image.repository=rhavis/helmdeploy \
        --set image.tag=${{ github.sha }} \
        --namespace default
