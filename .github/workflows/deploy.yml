@@ -39,7 +39,8 @@ jobs:
       env:
         KUBECONFIG: ${{ github.workspace }}/kubeconfig
       run: |
-       cd my-app       helm upgrade --install my-app . \
+       cd my-app && \
+       helm upgrade --install my-app . \
        --set image.repository=rhavis/helmdeploy \
        --set image.tag=${{ github.sha }} \
        --namespace default
