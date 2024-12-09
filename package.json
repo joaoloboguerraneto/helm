@@ -1,13 +1,15 @@
 {
-    "name": "app",
-    "version": "1.0.0",
-    "main": "service.js",
-    "repository": "",
-    "scripts": {
-      "start": "node service.js"
-    },
-    "dependencies": {
-      "express": "^4.16.2"
-    }
-  }
-  
+  "name": "app",
+  "version": "1.0.0",
+  "description": "A simple Express app",
+  "main": "service.js",
+  "scripts": {
+    "start": "node service.js",
+    "build": "echo 'No build step required'"
+  },
+  "dependencies": {
+    "express": "^4.16.2"
+  },
+  "author": "",
+  "license": "ISC"
+}
