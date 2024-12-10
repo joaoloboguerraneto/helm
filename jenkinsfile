@@ -2,23 +2,24 @@ pipeline {
     agent any
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        KUBECONFIG = '/path/to/your/kube/config' // Adicione o caminho correto
     }
     stages {
         stage('Build Docker Images') {
             steps {
                 script {
-                    sh 'docker build -t your-dockerhub-user/my-app:latest -f Dockerfile .'
-                    sh 'docker build -t your-dockerhub-user/nginx:latest -f Dockerfile.nginx .'
+                    sh 'docker build -t my-app:latest -f Dockerfile .'
+                    sh 'docker build -t nginx:latest -f Dockerfile.nginx .'
                 }
             }
         }
-        stage('Push to Docker Hub') {
+        stage('Push Docker Images to Minikube Registry') {
             steps {
                 script {
                     sh '''
-                    echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin
-                    docker push your-dockerhub-user/my-app:latest
-                    docker push your-dockerhub-user/nginx:latest
+                    eval $(minikube docker-env)
+                    docker build -t my-app:latest -f Dockerfile .
+                    docker build -t nginx:latest -f Dockerfile.nginx .
                     '''
                 }
             }
@@ -27,12 +28,28 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    helm upgrade --install my-app ./charts/my-app \
-                    --set image.app.repository=your-dockerhub-user/my-app \
-                    --set image.nginx.repository=your-dockerhub-user/nginx
+                    helm upgrade --install my-app ./charts/pythonap \
+                        --set image.app.repository=my-app \
+                        --set image.nginx.repository=nginx \
+                        --set service.app.port=5000 \
+                        --set service.nginx.port=80
                     '''
                 }
             }
         }
     }
+    post {
+        always {
+            echo 'Pipeline execution completed.'
+        }
+        success {
+            echo 'Deployment succeeded!'
+        }
+        failure {
+            echo 'Deployment failed. Please check the logs for more details.'
+        }
+    }
 }
+
+ "LowerDir": "/var/lib/docker/overlay2/5af8738b7723238526cbb14081fcef75523afc0c32b07290f974c71520162225/
+ 
