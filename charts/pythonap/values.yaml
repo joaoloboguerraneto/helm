@@ -1,0 +1,16 @@
+image:
+  app:
+    repository: rhavis/pythonapp
+    tag: latest
+    pullPolicy: Always
+  nginx:
+    repository: rhavis/nginx
+    tag: latest
+    pullPolicy: Always
+service:
+  app:
+    type: ClusterIP
+    port: 5000
+  nginx:
+    type: NodePort
+    port: 80

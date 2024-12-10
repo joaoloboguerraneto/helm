@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+    }
+    stages {
+        stage('Build Docker Images') {
+            steps {
+                script {
+                    sh 'docker build -t your-dockerhub-user/my-app:latest -f Dockerfile .'
+                    sh 'docker build -t your-dockerhub-user/nginx:latest -f Dockerfile.nginx .'
+                }
+            }
+        }
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    sh '''
+                    echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin
+                    docker push your-dockerhub-user/my-app:latest
+                    docker push your-dockerhub-user/nginx:latest
+                    '''
+                }
+            }
+        }
+        stage('Deploy with Helm') {
+            steps {
+                script {
+                    sh '''
+                    helm upgrade --install my-app ./charts/my-app \
+                    --set image.app.repository=your-dockerhub-user/my-app \
+                    --set image.nginx.repository=your-dockerhub-user/nginx
+                    '''
+                }
+            }
+        }
+    }
+}
